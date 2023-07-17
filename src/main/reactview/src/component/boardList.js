@@ -12,7 +12,7 @@ import * as turf from '@turf/turf';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import '../css/boardList.css';
 
-function BoardList() {
+function BoardList({ csrfToken }) {
     const [topCategories, setTopCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
     const [loadedBoardIds, setLoadedBoardIds] = useState([]); // 기존에 로드된 게시물의 ID 저장
@@ -75,16 +75,14 @@ function BoardList() {
     }, []);
 
 
-
-    useEffect(() => {
-        fetchData();
-    }, [searchQuery, subCategoryId, minPrice, maxPrice, sortBy, searchArea]);
-
     useEffect(() => {
         const newSearchParams = new URLSearchParams(searchParams);
         window.history.replaceState({}, '', '?' + newSearchParams.toString());
     }, [searchParams]);
 
+    useEffect(() => {
+        fetchData();
+    }, [searchQuery, subCategoryId, minPrice, maxPrice, sortBy, searchArea]);
 
     const fetchData = async () => {
         setTimeout(async () => {
@@ -151,7 +149,7 @@ function BoardList() {
                     .then(async (response) => {
                         let fetchedBoards = [];
                         if (page > 0) {
-                            const requests = Array.from({ length: page }, (_, i) => {
+                            const requests = Array.from({length: page}, (_, i) => {
                                 let previousEndpoint = endpoint.replace(`/page/${page + 1}`, `/page/${i + 1}`);
                                 // const scrollPosition = sessionStorage.getItem("scrollPosition");
                                 // if (scrollPosition) {
@@ -218,20 +216,6 @@ function BoardList() {
         const searchQuery = e.target.elements.searchQuery.value;
         setSearchQuery(searchQuery);
         setPage(0);
-        if (searchQuery) {
-            const existingFilter = activeFilters.find((filter) => filter.type === '검색어');
-            if (existingFilter) {
-                setActiveFilters((prevFilters) =>
-                    prevFilters.map((filter) =>
-                        filter.type === '검색어' ? {type: '검색어', value: searchQuery} : filter
-                    )
-                );
-            } else {
-                setActiveFilters((prevFilters) => [...prevFilters, {type: '검색어', value: searchQuery}]);
-            }
-        }
-
-
     };
 
     const handleAreaSearch = (loc, dong) => {
@@ -508,7 +492,6 @@ function BoardList() {
     const handleAddressLinkClick = (index) => {
         const location = userLocationList[index];
         setSelectedArea(extractDong(location.address));
-        console.log('왜 안됄' + JSON.stringify(location.code));
         setCurrentAdmNm(location.code);
     };
 
@@ -520,6 +503,21 @@ function BoardList() {
 
     const handleSliderChange = (e) => {
         setMapLevel(parseInt(e.target.value));
+    };
+
+    const handleDeleteLocation = (index) => {
+        const location = userLocationList[index];
+        axios.post('/api/deleteUserLcation', location.id, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            }
+        }).then((response)=>{
+            setUserLocationList(response.data);
+            fetchData();
+        }).catch((e) => {
+            alert(e);
+        });
     };
 
     return (
@@ -722,24 +720,36 @@ function BoardList() {
                         <div className="col">
                             <ul className="list-group userLocation-list d-flex flex-row align-items-center flex-nowrap">
                                 {userLocationList.map((result, index) => (
-                                    <li key={index} className="list-group-item">
+                                    <li key={index} className="list-group-item" style={{border: "1px solid grey"}}>
                                         <button
                                             type="button"
-                                            className="btn btn-link address-link"
+                                            className="btn btn-link"
+                                            style={{textDecoration: "none", color: "grey"}}
                                             onClick={() => {
                                                 handleAddressLinkClick(index)
                                             }}
                                         >
                                             {result.address}
                                         </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-link"
+                                            style={{textDecoration: "none", color: "grey", marginLeft: "5px"}}
+                                            onClick={() => {
+                                                handleDeleteLocation(index);
+                                            }}
+                                        >
+                                            x
+                                        </button>
                                     </li>
                                 ))}
-                                <li className="list-group-item">
+                                <li className="list-group-item" style={{border: "1px solid grey"}}>
                                     <button
                                         type="button"
-                                        className="btn btn-link address-link"
+                                        className="btn btn-link"
+                                        style={{textDecoration: "none", color: "grey"}}
                                         onClick={() => {
-                                            // Handle the action for the + button
+                                            window.location.href = "/map";
                                         }}
                                     >
                                         +
@@ -748,6 +758,7 @@ function BoardList() {
                             </ul>
                         </div>
                     </Row>
+
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleUserLocationCloseModal}>

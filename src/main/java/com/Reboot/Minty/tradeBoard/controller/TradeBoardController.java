@@ -49,7 +49,6 @@ public class TradeBoardController {
     private final TradeBoardService tradeBoardService;
     private final TradeBoardRepository tradeBoardRepository;
     private final AddressCodeRepository addressCodeRepository;
-
     private final UserService userService;
     @Autowired
     public TradeBoardController(CategoryService categoryService, TradeBoardService tradeBoardService, TradeBoardRepository tradeBoardRepository, AddressCodeRepository addressCodeRepository, UserLocationRepository userLocationRepository, UserService userService) {
@@ -401,5 +400,15 @@ public class TradeBoardController {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PostMapping("/api/deleteUserLcation")
+    @ResponseBody
+    public ResponseEntity<?> deleteUserLocation(@RequestBody Long id, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
+        userService.deleteUserLocation(id,userId);
+        List<UserLocationResponseDto> userLocationList = tradeBoardService.getLogginedLocationList(userId);
+        return ResponseEntity.ok().body(userLocationList);
     }
 }
