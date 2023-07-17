@@ -53,6 +53,30 @@ function BoardList() {
     const [currentPath, setCurrentPath] = useState();
 
     useEffect(() => {
+        window.addEventListener("beforeunload", () => {
+            sessionStorage.setItem("scrollPosition", window.scrollY.toString());
+        });
+        return () => {
+            window.removeEventListener("beforeunload", () => {
+                sessionStorage.setItem("scrollPosition", window.scrollY.toString());
+            });
+        };
+    }, []);
+
+    useEffect(() => {
+        const savedBoards = JSON.parse(sessionStorage.getItem("savedBoards"));
+        if (savedBoards) {
+            setTradeBoards(savedBoards);
+        }
+        const scrollPosition = sessionStorage.getItem("scrollPosition");
+        if (scrollPosition) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }, []);
+
+
+
+    useEffect(() => {
         fetchData();
     }, [searchQuery, subCategoryId, minPrice, maxPrice, sortBy, searchArea]);
 
@@ -124,11 +148,29 @@ function BoardList() {
 
                 await axios
                     .get(endpoint)
-                    .then((response) => {
-                        if ((page === 0 && endpoint !== `/api/boardList/page/0`)) {
+                    .then(async (response) => {
+                        let fetchedBoards = [];
+                        if (page > 0) {
+                            const requests = Array.from({ length: page }, (_, i) => {
+                                let previousEndpoint = endpoint.replace(`/page/${page + 1}`, `/page/${i + 1}`);
+                                // const scrollPosition = sessionStorage.getItem("scrollPosition");
+                                // if (scrollPosition) {
+                                //     window.scrollTo(0, parseInt(scrollPosition));
+                                // }
+                                return axios.get(previousEndpoint);
+
+                            });
+                            const responses = await Promise.all(requests);
+                            responses.forEach(previousResponse => {
+                                fetchedBoards = [...fetchedBoards, ...previousResponse.data.tradeBoards];
+                            });
+                        }
+                        if (page === 0 && endpoint !== `/api/boardList/page/0`) {
                             setTradeBoards(response.data.tradeBoards);
                         } else {
-                            setTradeBoards((prevBoards) => [...prevBoards, ...response.data.tradeBoards]);
+                            setTradeBoards([...fetchedBoards, ...response.data.tradeBoards]);
+                            sessionStorage.setItem("savedBoards", JSON.stringify([...fetchedBoards, ...response.data.tradeBoards])); // 저장
+
                         }
                         let top = [...response.data.top];
                         let sub = [...response.data.sub];
