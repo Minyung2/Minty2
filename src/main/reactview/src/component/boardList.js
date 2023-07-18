@@ -68,10 +68,10 @@ function BoardList({ csrfToken }) {
         if (savedBoards) {
             setTradeBoards(savedBoards);
         }
-        const scrollPosition = sessionStorage.getItem("scrollPosition");
-        if (scrollPosition) {
-            window.scrollTo(0, parseInt(scrollPosition));
-        }
+        // const scrollPosition = sessionStorage.getItem("scrollPosition");
+        // if (scrollPosition) {
+        //     window.scrollTo(0, parseInt(scrollPosition));
+        // }
     }, []);
 
 
@@ -148,20 +148,24 @@ function BoardList({ csrfToken }) {
                     .get(endpoint)
                     .then(async (response) => {
                         let fetchedBoards = [];
+                        if (!response.data || !response.data.tradeBoards || response.data.tradeBoards.length === 0) {
+                            setTradeBoards([]);
+                            setHasMore(false);
+                        }
                         if (page > 0) {
                             const requests = Array.from({length: page}, (_, i) => {
                                 let previousEndpoint = endpoint.replace(`/page/${page + 1}`, `/page/${i + 1}`);
-                                // const scrollPosition = sessionStorage.getItem("scrollPosition");
-                                // if (scrollPosition) {
-                                //     window.scrollTo(0, parseInt(scrollPosition));
-                                // }
                                 return axios.get(previousEndpoint);
-
+                                const scrollPosition = sessionStorage.getItem("scrollPosition");
+                                if (scrollPosition) {
+                                    window.scrollTo(0, parseInt(scrollPosition));
+                                }
                             });
                             const responses = await Promise.all(requests);
                             responses.forEach(previousResponse => {
                                 fetchedBoards = [...fetchedBoards, ...previousResponse.data.tradeBoards];
                             });
+
                         }
                         if (page === 0 && endpoint !== `/api/boardList/page/0`) {
                             setTradeBoards(response.data.tradeBoards);
@@ -578,7 +582,7 @@ function BoardList({ csrfToken }) {
                                     <input type="text" className="search-input" name="searchQuery"
                                            value={searchQueryInput}
                                            onChange={(e) => setSearchQueryInput(e.target.value)}/>
-                                    <button type="submit">
+                                    <button type="submit" className="searchBtn">
                                         <BiSearch/>
                                     </button>
                                 </Col>
@@ -615,9 +619,9 @@ function BoardList({ csrfToken }) {
                                     onChange={(e) => setMaxPriceInput(e.target.value)}
                                 />
                             </Form.Group>
-                            <Button variant="primary" type="submit" className="mr-2 search">
-                                검색
-                            </Button>
+                            <button type="submit" className="searchBtn">
+                                <BiSearch/>
+                            </button>
                         </Form>
                     </Col>
                 </Row>
@@ -717,6 +721,7 @@ function BoardList({ csrfToken }) {
                     <br/><br/>
 
                     <Row className="userLocationList">
+                        <Col md={11}>
                         <div className="col">
                             <ul className="list-group userLocation-list d-flex flex-row align-items-center flex-nowrap">
                                 {userLocationList.map((result, index) => (
@@ -757,6 +762,7 @@ function BoardList({ csrfToken }) {
                                 </li>
                             </ul>
                         </div>
+                        </Col>
                     </Row>
 
                 </Modal.Body>

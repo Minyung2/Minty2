@@ -29,13 +29,6 @@
 }
 
 
-
-
-.modal-img{
-    width: 650px !important;
-    height: 550px !important;
-}
-
 .board-content{
     padding-bottom: 10px;
     border-bottom: 2px solid grey;
@@ -56,4 +49,34 @@
     list-style: none;
     text-align: center;
     margin-top: 40vh;
+}
+:local .my-modal{
+    width: 720px;
+}
+
+:local .modal-content{
+    width: 100%;
+}
+.modal-img{
+    width: 100% !important;
+}
+
+.detail-user-img{
+    border-radius: 50%;
+    width:60px;
+    height: 60px;
+}
+
+.user-info-container-top{
+    padding-bottom : 20px;
+}
+
+.user-info-container{
+    display: flex;
+    gap : 20px;
+    padding-bottom : 20px;
+}
+
+.user-info-level{
+    padding-bottom: 30px;
 }

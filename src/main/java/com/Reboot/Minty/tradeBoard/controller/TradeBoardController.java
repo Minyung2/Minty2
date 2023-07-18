@@ -202,6 +202,7 @@ public class TradeBoardController {
             response.setTradeBoard(tradeBoard);
             response.setNickName(nickName);
             response.setImageList(imageList);
+            System.out.println("트보 : "+tradeBoard.toString());
             return ResponseEntity.ok().body(response);
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
