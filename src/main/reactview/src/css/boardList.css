@@ -62,7 +62,7 @@
   box-sizing: border-box;
   padding: 5px;
   border: 1px solid gray;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .sell-board-image {
@@ -209,7 +209,7 @@
 .writebutton{
      padding: 10px 2em 0;
      background-color:#6bc27e!important;
-     margin-top: 30%;
+     margin-top: 35%;
      position: fixed;
      margin-left: 12%;
 }

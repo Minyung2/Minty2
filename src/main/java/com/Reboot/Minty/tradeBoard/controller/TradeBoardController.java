@@ -190,8 +190,14 @@ public class TradeBoardController {
 
         try {
             TradeBoardDetailDto tradeBoard = tradeBoardService.findById(boardId);
+            User user = userService.getUserInfoById(tradeBoard.getUser().getId());
             List<TradeBoardImgDto> imageList = tradeBoardService.getImgList(boardId);
-
+            List<TradeBoardDto> userBoardItems = tradeBoardService.getTradeBoardListByUser(tradeBoard.getUser().getId());
+            if (userBoardItems.size() > 6) {
+                userBoardItems = userBoardItems.subList(0, 6);
+            }
+            Collections.sort(userBoardItems, Comparator.comparing(TradeBoardDto::getCreatedDate).reversed());
+            int countUserItems = tradeBoardRepository.countByUser(user);
             String nickName = tradeBoard.getUser().getNickName();
             HttpSession session = request.getSession();
             boolean isAuthor = tradeBoard.getUser().getEmail().equals(session.getAttribute("userEmail"));
@@ -202,7 +208,8 @@ public class TradeBoardController {
             response.setTradeBoard(tradeBoard);
             response.setNickName(nickName);
             response.setImageList(imageList);
-            System.out.println("트보 : "+tradeBoard.toString());
+            response.setUserBoardItems(userBoardItems);
+            response.setCountUserItems(countUserItems);
             return ResponseEntity.ok().body(response);
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());

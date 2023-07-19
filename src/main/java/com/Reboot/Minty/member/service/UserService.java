@@ -220,6 +220,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByWithdrawalDateBefore(date);
     }
 
+
     public void deleteUserLocation(Long id, Long userId){
         List<UserLocation> userLocationList = userLocationRepository.findAllByUserId(userId);
         Optional<UserLocation> locationToDelete = userLocationList.stream()
@@ -227,4 +228,5 @@ public class UserService implements UserDetailsService {
                 .findFirst();
         locationToDelete.ifPresent(userLocationRepository::delete);
     }
+
 }

@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Link, useParams, useNavigate, useSearchParams, useLocation} from 'react-router-dom';
+import {useNavigate, useLocation} from 'react-router-dom';
 import axios from 'axios';
-import Pagination from './pagination';
 import {Button, Container, Row, Col, Nav, Form, Modal, Dropdown, DropdownButton} from 'react-bootstrap';
 import RangeSlider from 'react-bootstrap-range-slider';
 import {formatDistanceToNow, parseISO} from 'date-fns';
@@ -68,10 +67,45 @@ function BoardList({ csrfToken }) {
         if (savedBoards) {
             setTradeBoards(savedBoards);
         }
-        // const scrollPosition = sessionStorage.getItem("scrollPosition");
-        // if (scrollPosition) {
-        //     window.scrollTo(0, parseInt(scrollPosition));
-        // }
+        const filterSearchParams = () => {
+            const filters = [];
+
+            if (searchQuery) {
+                filters.push({ type: '검색어', value: searchQuery });
+            }
+            if (subCategoryId) {
+                filters.push({ type: '카테고리', value: subCategoryId });
+            }
+            if (minPrice) {
+                filters.push({ type: '최소 가격', value: minPrice });
+            }
+            if (maxPrice) {
+                filters.push({ type: '최대 가격', value: maxPrice });
+            }
+            if (sortBy) {
+                let filterValue;
+                switch (sortBy) {
+                    case 'itemDesc':
+                        filterValue = '최신순';
+                        break;
+                    case 'priceAsc':
+                        filterValue = '낮은 가격순';
+                        break;
+                    case 'priceDesc':
+                        filterValue = '높은 가격순';
+                        break;
+                    default:
+                        filterValue = '';
+                        break;
+                }
+                filters.push({ type: '정렬 방식', value: filterValue });
+            }
+            if (searchArea.length > 0) {
+                filters.push({ type: '지역', value: searchArea });
+            }
+
+            setActiveFilters(filterSearchParams);
+        };
     }, []);
 
 

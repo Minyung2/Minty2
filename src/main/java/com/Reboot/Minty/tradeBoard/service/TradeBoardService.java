@@ -286,6 +286,8 @@ public class TradeBoardService {
         List<TradeBoardDto> tradeBoardDtos = new ArrayList<>();
         for (TradeBoard tradeBoard : tradeBoards) {
             TradeBoardDto tradeBoardDto = new TradeBoardDto();
+            tradeBoardDto.setId(tradeBoard.getId());
+            tradeBoardDto.setModifiedDate(tradeBoard.getModifiedDate());
             tradeBoardDto.setTitle(tradeBoard.getTitle());
             tradeBoardDto.setPrice(tradeBoard.getPrice());
             tradeBoardDto.setThumbnail(tradeBoard.getThumbnail());

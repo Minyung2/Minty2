@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
-import {useParams, useNavigate, useLocation} from 'react-router-dom';
+import {useParams, useNavigate, useLocation, Link} from 'react-router-dom';
 import {Container, Row, Col, Button, Carousel, Stack, Modal} from 'react-bootstrap';
 import '../css/boardDetail.css';
 import {formatDistanceToNow, parseISO} from 'date-fns';
@@ -18,8 +18,9 @@ function BoardDetail({csrfToken}) {
     const {id} = useParams();
     const [isLiked, setIsLiked] = useState();
     const navigate = useNavigate();
+    const [countUserItems, setCountUserItems] = useState(0);
+    const [userBoardItems, setUserBoardItems] = useState([]);
     const location = useLocation();
-
     const handleEditClick = () => {
         navigate(`/writeForm/${id}`, {state: {tradeBoard, imageList}});
     };
@@ -49,11 +50,15 @@ function BoardDetail({csrfToken}) {
                 if (response.status === 200) {
                     setTradeBoard(response.data.tradeBoard);
                     let list = [...response.data.imageList];
+                    let userList = [...response.data.userBoardItems];
                     setNickName(response.data.nickName);
                     setImageList(list);
                     setIsAuthor(response.data.author);
                     setIsLiked(response.data.wish);
-                    console.log("트보" + JSON.stringify(response.data.tradeBoard));
+                    setCountUserItems(response.data.countUserItems);
+                    setUserBoardItems(userList);
+                    console.log(JSON.stringify(response.data.userBoardItems) + "아이템전 ㄹㅇㅋㅋ");
+
                 } else {
                     alert("알 수 없는 오류");
                     window.history.back(); // 이전 페이지로 이동
@@ -175,8 +180,8 @@ function BoardDetail({csrfToken}) {
                         ))}
                     </Carousel>
                 </Col>
-                <Col>
-                    <Stack gap={3}>
+                <Col className="content-container">
+                    <Stack gap={5}>
                         <h2>{tradeBoard.title}</h2>
                         <h2>{Number(tradeBoard.price).toLocaleString()} 원</h2>
                         <h2>{nickName}</h2>
@@ -189,7 +194,7 @@ function BoardDetail({csrfToken}) {
                     </Col>
                     <Col className="button-groups">
                         {!isAuthor && (
-                            <Button variant="primary" onClick={handleLikeClick}>
+                            <button className="interesting-button" onClick={handleLikeClick}>
                                 {isLiked ? (
                                     <>
                                         찜하기취소
@@ -199,10 +204,10 @@ function BoardDetail({csrfToken}) {
                                         찜하기
                                     </>
                                 )}
-                            </Button>
+                            </button>
                         )}
                         {!isAuthor && tradeBoard.tradeStatus == "SELL" &&
-                            <Button variant="secondary" onClick={chatRoom}>채팅</Button>}
+                            <button className="interesting-button" onClick={chatRoom}>채팅</button>}
                         {/*{!isAuthor &&<Button variant="success" onClick={purchasingReq}>*/}
                         {/*  구매 신청*/}
                         {/*</Button>}*/}
@@ -216,40 +221,60 @@ function BoardDetail({csrfToken}) {
                 </Col>
                 <Col md={4}>
                     <div className="user-info-container-top">
-                        <br/><span>상점 정보</span><br/>
+                        <br/><span>개인상점 정보</span><br/>
                     </div>
                     <div className="user-info-container">
                         <img
                             src={`https://storage.cloud.google.com/reboot-minty-storage/${tradeBoard.user?.image}`}
                             className="detail-user-img"
                         />
-                        <div className="user-info-level">
-                            Lv.{tradeBoard.user?.level}
-                        </div>
-                        <div>
-                            {tradeBoard.user?.nickName}
+                        <div className="user-info-detail">
+                            <div className="user-level">Lv.{tradeBoard.user?.level}</div>
+                            <div className="user-nickName">{tradeBoard.user?.nickName}</div>
                         </div>
                     </div>
-                    <div className="user-sell-list">
-                        {tradeBoard.user?.nickName} 님의 판매 상품 : 몇개
+                    <div className="user-sell-count">
+                        {tradeBoard.user?.nickName} 님의 판매 상품 : {countUserItems} 개
                     </div>
+                    <div className="user-sell-item-list">
+                        {userBoardItems.map((item) => (
+                            <a href={`/boardDetail/${item.id}`} key={item.id}
+                               style={{textDecoration: 'none', color: 'black'}}>
+                                <div className="detail-item">
+                                    <img
+                                        src={`https://storage.cloud.google.com/reboot-minty-storage/${item.thumbnail}`}
+                                        className="detail-item-img"
+                                    />
+                                    <span className="detail-item-title">{item.title}</span>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                    <div className="more-button-container">
+                        <a href={`/usershop/${tradeBoard.user?.id}`} className="more-button"
+                           style={{textDecoration: 'none'}}>
+                            <span style={{color: 'blue'}}>{countUserItems}</span><span style={{color: 'black'}}>개의 상품 더보기 ></span>
+                        </a>
+                    </div>
+
                 </Col>
             </Row>
-            <br/><br/>
-            <Row>
-                <Col md={12}></Col>
-                <Col md={3}>
-                    <div>
-                        <Row className="justify-content-end">
-                            <Col>
-                                {isAuthor &&
-                                    <Button variant="primary" onClick={handleEditClick} style={{gap: "3"}}>수정</Button>}
-                                {isAuthor && <Button variant="primary" onClick={handleDeleteClick}>삭제</Button>}
-                            </Col>
-                        </Row>
-                    </div>
-                </Col>
-            </Row>
+            <br/>
+            <br/>
+            <div className="content-button">
+                {isAuthor &&
+                    <>
+                        <Button variant="outline-info" onClick={handleEditClick} style={{color: "grey"}}>수정</Button>
+                        <Button variant="outline-info" onClick={handleDeleteClick} style={{color: "grey"}}>삭제</Button>
+                        <Button variant="outline-info" href="/boardList/" style={{color: "grey"}}>목록</Button>
+                    </>
+                }
+                {!isAuthor && (
+                    <Button variant="outline-info" href="/boardList/" style={{color: "grey", width: "95%"}}>목록</Button>
+                )}
+            </div>
+
+
 
             <Modal show={showModal} onHide={handleCloseModal} centered size='lg'>
                 <Modal.Body>
@@ -261,7 +286,8 @@ function BoardDetail({csrfToken}) {
                 </Modal.Body>
             </Modal>
         </Container>
-    );
+    )
+        ;
 }
 
 export default BoardDetail;
