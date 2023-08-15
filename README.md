@@ -23,27 +23,54 @@ React의 생명주기 메서드와 Hook 등의 개념을 이해하고 적용하�
 * Frontend : HTML5, CSS3, JavaScript, React
 * Backend : Java, Python
 * Framework : Spring boot
-* Database : My SQL
-* Version Control : Git, GitHub
+* Database : MySQL
+* Version Control : GitHub
 
-### 담당한 기능
+## 담당한 기능
 
 ### **Backend**
 
-- 회원가입 / 스프링 시큐리티, OAuth2 ****간편 로그인
+- 회원가입 / 스프링 시큐리티, OAuth2 간편 로그인
 - 거래게시판 Querydsl로 동적인 검색 필터 적용
 - 거래게시판 글쓰기
 - 거래게시판 상세보기
 - 거래게시판 지도 거래 장소 확대 및 축소 기능
 - 카카오 지도 API로 위치 인증, 거래 장소 잡기 기능
 - 네이버 SENS API로 회원가입 시 본인인증 기능
+- 거래 확정
 
 ### **Frontend**
 
 - 리액트 : 거래게시판 리스트, 상세보기, 글쓰기 UI
 - 타임리프 : 회원가입, 로그인
 
-- ### 기능 구현 중 어려웠던 상황과 극복 과정
+<br><br>
+
+## 구현 스크린샷
+### 거래게시판 페이징
+기본적으로 무한 스크롤로 구현 하였으며 필터마다 Querydsl 로 동적으로 추가 / 삭제 가능하게 구현하였습니다.
+<img src="https://github.com/Minyung2/Minty2/assets/90165157/c05c9cc0-bc59-48c6-a82b-65917a300fd2" width="800" height="400"/>
+
+### 거래게시판 거래 지역 범위 지정
+글 작성자가 인증한 위치 기반으로 범위를 3단계까지 확장 할 수 있게 구현하였습니다. 각 단계별로 1단계는 자신의 해당 동 2단계는 2.5km 3단계는 5km 로 반경 안의 행정동 기준으로 확장할 수 있게 구현하였습니다.
+<img src="https://github.com/Minyung2/Minty2/assets/90165157/85e0ecc3-820b-4f26-bc7f-4cad5a25b785" width="800" height="400"/>
+
+### 거래게시판 글 상세보기
+부트스트랩 이미지 리스트를 부트스트랩 Carousel로 순차적으로 넘기고 해당 사진은 크게 Modal로 띄워주는 방식으로 구현했습니다. 이외에 글쓴이의 개인 상점 정보 및 해당 상품의 링크, 해당 글쓴이의 모든 글로 접근 가능 한 버튼 추가하였습니다
+<img src="https://github.com/Minyung2/Minty2/assets/90165157/24421a33-376e-4609-b745-63506c5e2814" width="800" height="400"/>
+
+### 거래게시판 글쓰기 
+이미지 위치 동적으로 변경, 현재 위치는 IP기반 주소 검색은 자체 DB로 구현
+<img src="https://github.com/Minyung2/Minty2/assets/90165157/74d74cb2-5ece-4992-8555-7d9f43c1efc0" width="800" height="400"/>
+
+### 거래 위치 잡기
+해당 위치를 띄워 줄 수 있게 구현하였습니다. 거래 장소는 추후 변경 할 수도 있다고 생각하여 거래 장소 잡기 버튼은 별도의 조건 없이 계속 띄워 줄 수 있게 구현 하였습니다.
+![image](https://github.com/Minyung2/Minty2/assets/90165157/1c4d834e-5fa3-417e-a10e-93052e3a9aca)
+
+<br>
+
+
+- ## 기능 구현 중 어려웠던 상황과 극복 과정
 
 1. **페이징 로직의 변화** - 최초 페이징 구현은 1~10 처럼 페이징 버튼으로 구현 하였었는데 강사님과의 피드백 과정에서 이미 수업 과정에서 동일 페이징을 구현해 봤으니 **무한 스크롤**로 구현해보는 것을 도전해 보라고 하셔서 기존의 페이징 수정
 <br> **해결 과정** - 리액트 InfiniteScroll 라이브러리를 사용하여 fetchData로 필요 시 리스트를 더 불러오는 방식으로 해결
