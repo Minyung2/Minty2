@@ -51,23 +51,27 @@ React의 생명주기 메서드와 Hook 등의 개념을 이해하고 적용하�
 
 ## 구현 스크린샷
 ### 거래게시판 페이징
-기본적으로 무한 스크롤로 구현 하였으며 필터마다 Querydsl 로 동적으로 추가 / 삭제 가능하게 구현하였습니다.
 <img src="https://github.com/Minyung2/Minty2/assets/90165157/c05c9cc0-bc59-48c6-a82b-65917a300fd2" width="800" height="400"/>
 
 ### 거래게시판 거래 지역 범위 지정
-글 작성자가 인증한 위치 기반으로 범위를 3단계까지 확장 할 수 있게 구현하였습니다. 각 단계별로 1단계는 자신의 해당 동 2단계는 2.5km 3단계는 5km 로 반경 안의 행정동 기준으로 확장할 수 있게 구현하였습니다.
 <img src="https://github.com/Minyung2/Minty2/assets/90165157/85e0ecc3-820b-4f26-bc7f-4cad5a25b785" width="800" height="400"/>
 
 ### 거래게시판 글 상세보기
-부트스트랩 이미지 리스트를 부트스트랩 Carousel로 순차적으로 넘기고 해당 사진은 크게 Modal로 띄워주는 방식으로 구현했습니다. 이외에 글쓴이의 개인 상점 정보 및 해당 상품의 링크, 해당 글쓴이의 모든 글로 접근 가능 한 버튼 추가하였습니다
 <img src="https://github.com/Minyung2/Minty2/assets/90165157/24421a33-376e-4609-b745-63506c5e2814" width="800" height="400"/>
 
-### 거래게시판 글쓰기 
-이미지 위치 동적으로 변경, 현재 위치는 IP기반 주소 검색은 자체 DB로 구현
+### 거래게시판 글쓰기, 수정
 <img src="https://github.com/Minyung2/Minty2/assets/90165157/74d74cb2-5ece-4992-8555-7d9f43c1efc0" width="800" height="400"/>
 
 ### 거래 위치 잡기
-해당 위치를 띄워 줄 수 있게 구현하였습니다. 거래 장소는 추후 변경 할 수도 있다고 생각하여 거래 장소 잡기 버튼은 별도의 조건 없이 계속 띄워 줄 수 있게 구현 하였습니다.
 ![image](https://github.com/Minyung2/Minty2/assets/90165157/1c4d834e-5fa3-417e-a10e-93052e3a9aca)
+
+### 회원가입
+![image](https://github.com/Minyung2/Minty2/assets/90165157/8fcb7aba-53fe-4046-b4ed-2c7143232813)
+
+### 통합 로그인 환경
+![image](https://github.com/Minyung2/Minty2/assets/90165157/10863acb-616b-4f84-a64d-103f491ed754)
+
+
+
 
 <br>
