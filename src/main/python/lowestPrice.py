@@ -36,9 +36,7 @@ try:
         title = row[0]
         id = row[1]
 
-        # gptApi가 상품이름 분석하는 부분
 
-        openai.api_key = "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"
 
         messages = []
 
