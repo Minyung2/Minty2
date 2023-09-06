@@ -7,6 +7,7 @@ import time
 import openai
 import pandas as pd
 
+# 9/5 API코드 삭제
 # The part that connects to Mysqldb and gets the title
 
 db_host = 'localhost'
