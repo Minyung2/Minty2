@@ -33,30 +33,30 @@ React의 생명주기 메서드와 Hook 등의 개념을 이해하고 적용하�
 ## 담당한 기능
 
 ### 회원가입
-- 작업 내용 : 정규식으로 유효성 체크 NAVER API와 통신하는 방식으로 본인 확인 문자 메시지 인증 기능을 구현. 
-- 아쉬웠던 점 : DTO로 기본적인 정규식, Null 체크 등의 유효성 체크만 하던 부분이 아쉬움.
-- 해결 방안 : Validator를 상속받아 유효성 체크를 구현할 수 있다는 것을 배웠고 중복 체크, 비밀번호 체크 등 뷰 파일에서 어떤 부분에서 사용자의 입력 값이 틀렸는지 체크하고 제공.
+- 작업 내용 : 정규식으로 유효성 체크 NAVER API와 통신하는 방식으로 본인 확인 문자 메시지 인증 기능을 구현. [SmsService](https://github.com/Minyung2/Minty2/blob/master/src/main/java/com/Reboot/Minty/member/service/SmsService.java)
+- 아쉬웠던 점 : DTO로 기본적인 정규식, Null 체크 등의 유효성 체크만 하던 부분이 아쉬움. 
+- 해결 방안 : Validator를 상속받아 유효성 체크를 구현할 수 있다는 것을 배웠고 중복 체크, 비밀번호 체크 등 뷰 파일에서 어떤 부분에서 사용자의 입력 값이 틀렸는지 체크하고 제공. [JoinFormValidator](https://github.com/Minyung2/Minty2/blob/master/src/main/java/com/Reboot/Minty/member/service/JoinFormValidator.java)
 ### 통합 로그인 환경
-- 작업 내용 : 사용자 보안을 위해 Spring이 제공하는 Spring Security를 사용. 사용자 경험을 위해 간편로그인 OAuth2를 활용하여 구현.
+- 작업 내용 : 사용자 보안을 위해 Spring이 제공하는 Spring Security를 사용. 사용자 경험을 위해 간편로그인 OAuth2를 활용하여 구현. 
 - 어려웠던 점 : 통합 로그인의 처리에 어려움을 겪음.
-- 해결방안 : 자체 로그인과 OAuth2의 엔트리 포인트가 다르다는 것을 활용하여 엔트리 포인트를 구분하여 로그인 성공 처리.
+- 해결방안 : 자체 로그인과 OAuth2의 엔트리 포인트가 다르다는 것을 활용하여 엔트리 포인트를 구분하여 로그인 성공 처리. [SecurityConfig](https://github.com/Minyung2/Minty2/blob/master/src/main/java/com/Reboot/Minty/config/SecurityConfig.java)
 ### 게시판 CRUD 페이징
 - 작업 내용 : 중고 거래 게시물을 무한 스크롤로 페이징 구현 및 각종 검색 필터 적용.
 - 어려웠던 점 : 기존 카테고리와 제목/내용만 가능했던 검색 필터의 아쉬움.
-- 해결방안 : JPA의 비즈니스 로직을 구성하는데 집중할 수 있는 장점을 유지하기 위해 JPQL보단 QueryDSL을 활용하여 동적인 검색 쿼리를 생성. 정렬방법, 최소/최대가격, 판매하는 사용자 명 등 필터를 확장하여 사용자 경험을 향상.
+- 해결방안 : JPA의 비즈니스 로직을 구성하는데 집중할 수 있는 장점을 유지하기 위해 JPQL보단 QueryDSL을 활용하여 동적인 검색 쿼리를 생성. 정렬방법, 최소/최대가격, 판매하는 사용자 명 등 필터를 확장하여 사용자 경험을 향상. [TradeBoardController](https://github.com/Minyung2/Minty2/blob/6a20b3f513788587bce62b9f96f5cf231870fd41/src/main/java/com/Reboot/Minty/tradeBoard/controller/TradeBoardController.java#L116), [TradeBoardCustomRepository](https://github.com/Minyung2/Minty2/blob/master/src/main/java/com/Reboot/Minty/tradeBoard/repository/TradeBoardCustomRepository.java)
 ### 게시판 CRUD 원하는 거래 범위 지정
 - 작업 내용 : 거래게시판 페이지에서 거래 범위 단계별 지정. 인증한 위치 기반으로 범위를 3단계까지 확장.
 - 어려웠던 점 : 프로젝트 구현 중 가장 어려웠던 부분으로 카카오 맵 API로 범위 지정 UI를 구현하는데 어려움을 겪음.
-- 해결방안 : GeoJson을 활용하여 행정동 이름을 비교하고 Multipolygon 프로퍼티를 활용하여 카카오가 제공하는 Polygon 함수로 구현.
+- 해결방안 : GeoJson을 활용하여 행정동 이름을 비교하고 Multipolygon 프로퍼티를 활용하여 카카오가 제공하는 Polygon 함수로 구현. [drawPolygon](https://github.com/Minyung2/Minty2/blob/6a20b3f513788587bce62b9f96f5cf231870fd41/src/main/reactview/src/component/boardList.js#L458)
 ### 게시판 CRUD 글쓰기, 수정
-- 작업 내용 : 드래그 앤 드롭으로 이미지 순서 변경, 대표이미지 설정. 파이썬으로 카테고리를 스크래핑 하였고 사용자가 정확하게 선택하는 기능 제공.
+- 작업 내용 : 드래그 앤 드롭으로 이미지 순서 변경, 대표이미지 설정. 파이썬으로 카테고리를 스크래핑 하였고 사용자가 정확하게 선택하는 기능 제공. 
 - 어려웠던 점 : 이미지 파일 첨부 시 사용자가 의도한 대로 이미지 순서나 대표 이미지를 설정할 수 없었던 문제.
-- 해결방안 : React의 dnd-kit 라이브러리를 활용하여 컴포넌트에 담아 상태 관리.
+- 해결방안 : React의 dnd-kit 라이브러리를 활용하여 컴포넌트에 담아 상태 관리. [sortablePhoto](https://github.com/Minyung2/Minty2/blob/master/src/main/reactview/src/component/sortablePhoto.js), [dndContext](https://github.com/Minyung2/Minty2/blob/6a20b3f513788587bce62b9f96f5cf231870fd41/src/main/reactview/src/component/tradeForm.js#L292C37-L292C37)
 ### 게시판 CRUD  글 상세보기
 - 작업 내용 :
-1. 부트스트랩 이미지 리스트를 부트스트랩 Carousel로 순차적으로 넘기고 해당 사진은 크게 Modal로 띄워주는 방식.
-2. 글쓴이의 개인 상점 정보 및 해당 상품의 링크, 해당 글쓴이의 모든 글로 접근 가능 한 버튼 - 거래 희망 지역.
-3. 글쓴이에게 수정 / 삭제 버튼 생성, 이외 사용자인 경우 채팅, 찜하기 버튼 생성.
+1. 부트스트랩 이미지 리스트를 부트스트랩 Carousel로 순차적으로 넘기고 해당 사진은 크게 Modal로 띄워주는 방식.[Carousel](https://github.com/Minyung2/Minty2/blob/6a20b3f513788587bce62b9f96f5cf231870fd41/src/main/reactview/src/component/boardDetail.js#L163)
+2. 글쓴이의 개인 상점 정보 및 해당 상품의 링크, 해당 글쓴이의 모든 글로 접근 가능 한 버튼 - 거래 희망 지역. [userItemSellList](https://github.com/Minyung2/Minty2/blob/6a20b3f513788587bce62b9f96f5cf231870fd41/src/main/reactview/src/component/boardDetail.js#L239C58-L239C58)
+3. 글쓴이에게 수정 / 삭제 버튼 생성, 이외 사용자인 경우 채팅, 찜하기 버튼 생성. 
 ### 거래 위치 잡기
 - 작업 내용 : Kakao Map API 공식 참조 사이트를 거래 장소 선택 기능을 구현. 사용자가 원하는 지역을 정확하게 선택할 수 있도록 마커의 움직임과 행정 중심지 입력 기능을 제공.
 ###  기타 해결한 문제점  기여한 부분
@@ -64,7 +64,7 @@ React의 생명주기 메서드와 Hook 등의 개념을 이해하고 적용하�
 Entity 간의 참조관계로 인해 JSON 으로 변환 과정에서 서로의 엔티티를 순환 참조하면서 발생하는 Json Serializable Error를 경험.
 직렬화 문제를 해결하기 위해 DTO(Data Transfer Object)를 도입. 필요한 데이터만 전달하면서 데이터의 통신 안정성을 높이고 성능을 개선.
 - 인터셉터 활용
-인터셉터를 활용하여 사용자가 인증한 위치 정보가 없으면 입력하도록 유도
+인터셉터를 활용하여 사용자가 인증한 위치 정보가 없으면 입력하도록 유도 [userLocationInterceptor](https://github.com/Minyung2/Minty2/blob/master/src/main/java/com/Reboot/Minty/interceptor/UserLocationInterceptor.java)
 - 전반적인 스키마 설계 도움
 JPA로 데이터베이스의 구조와 관련하여 효율적인 설계를 제안하고 도움
 <br><br>
